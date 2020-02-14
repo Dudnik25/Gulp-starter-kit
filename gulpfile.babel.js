@@ -27,9 +27,10 @@ const path = {
 
 browserSync.create();
 
-function clean(cb) {
+function cleanDest(cb) {
   src(path.dest.local, {
-    read: false
+    read: false,
+    allowEmpty: true
   }).pipe(cleanDir());
   cb();
 }
@@ -125,7 +126,8 @@ function startWatch(cb) {
   cb();
 }
 
-export const build = series(clean, parallel(html, php, css, js, image, fonts));
+export const clean = series(cleanDest);
+export const build = series(cleanDest, parallel(html, php, css, js, image, fonts));
 const dev = series(parallel(html, php, css, js), startWatch);
 
 export default dev;
